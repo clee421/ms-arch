@@ -53,12 +53,7 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 	}
 	res, err := c.Authenticate(context.Background(), req)
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		encode(w, struct {
-			Error string `json:"error"`
-		}{
-			Error: "Username or password is incorrect!",
-		})
+		encodeError(w, http.StatusNotFound, "Username or password incorrect!")
 	} else {
 		encode(w, authResponse{res.Token})
 	}
