@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	fmt.Println("Hello world, from client")
+	fmt.Println("Authentication Client")
 	cc, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Could not connect: %v", err)
@@ -30,7 +30,7 @@ func main() {
 	}
 	res, err := c.Authenticate(context.Background(), req)
 	if err != nil {
-		log.Fatalf("Error from authenticating: %v", err)
+		log.Fatalf("Error from authenticating: %v\n", err)
 	}
 
 	log.Printf("Token: %v", res.Token)

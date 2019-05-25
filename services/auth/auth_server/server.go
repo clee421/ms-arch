@@ -38,7 +38,7 @@ func (*Server) Authenticate(ctx context.Context, req *authpb.AuthenticateRequest
 }
 
 func main() {
-	fmt.Println("hello world!")
+	fmt.Println("Authentication Server")
 
 	lis, err := net.Listen("tcp", "0.0.0.0:50051")
 	if err != nil {
