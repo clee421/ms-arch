@@ -16,3 +16,8 @@ $ brew upgrade dep
 ```
 
 User `dep` to install vendor files
+
+## TODOs
+
+* Service: Logging
+* Service: Error Handling
