@@ -107,8 +107,25 @@ Run in a new terminal to expose external ip
 $ minikube tunnel
 ```
 
+# Migrations
+
+## Auth: PostgresQL
+
+### CLI
+
+```shell
+$ migrate -database postgres://ms_auth_psql:password@localhost:5432/auth_db?sslmode=disable -path ./migrations up
+```
+
+### Connecting Manuall
+
+```shell
+$ psql -h localhost -p 5432 -d auth_db -U ms_auth_psql
+```
+
 # TODOs
 
-* Configuration Files
-* Service: Logging
-* Service: Error Handling
+1. Configuration Files
+2. Service: Logging
+3. Service: Error Handling
+4. Instructions to Setup
