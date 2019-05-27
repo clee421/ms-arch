@@ -1,0 +1,12 @@
+These are links I'm keeping just in case
+
+https://opensource.com/article/19/3/how-run-postgresql-kubernetes
+https://codefresh.io/howtos/local-k8s-draft-skaffold-garden/
+https://skaffold.dev/docs/references/yaml/
+https://skaffold.dev/docs/getting-started/#installing-skaffold
+
+https://github.com/GoogleCloudPlatform/postgresql-docker/blob/master/9/README.md#using-kubernetes
+
+https://hub.docker.com/_/postgres
+https://hackernoon.com/dont-install-postgres-docker-pull-postgres-bee20e200198
+https://www.saltycrane.com/blog/2019/01/how-run-postgresql-docker-mac-local-development/
