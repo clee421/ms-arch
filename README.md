@@ -109,5 +109,6 @@ $ minikube tunnel
 
 # TODOs
 
+* Configuration Files
 * Service: Logging
 * Service: Error Handling
