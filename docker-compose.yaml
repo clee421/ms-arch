@@ -2,9 +2,8 @@
 version: '3.1'
 
 services:
-
   auth_db:
-    image: postgres
+    image: postgres:latest
     restart: always
     environment:
       POSTGRES_DB: auth_db
@@ -12,3 +11,13 @@ services:
       POSTGRES_PASSWORD: password
     ports:
       - 5432:5432
+
+  code_challenge_db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: code_challenge_db
+      POSTGRES_USER: ms_cc_psql
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5433:5432
