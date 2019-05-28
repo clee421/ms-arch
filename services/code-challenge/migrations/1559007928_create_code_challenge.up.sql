@@ -1,7 +1,7 @@
-CREATE TABLE IF NOT EXISTS auth (
+CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
-  user_id UUID NOT NULL,
-  password text NOT NULL,
+  uuid UUID NOT NULL UNIQUE,
+  email text NOT NULL UNIQUE,
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()
 );
