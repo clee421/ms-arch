@@ -17,3 +17,6 @@ https://github.com/mattes/migrate/issues/230#issuecomment-316741653
 
 UUID
 https://dba.stackexchange.com/questions/69254/whats-the-most-efficient-uuid-column-type
+
+DATABASE VARCHAR vs TEXT
+https://dba.stackexchange.com/questions/20974/should-i-add-an-arbitrary-length-limit-to-varchar-columns
