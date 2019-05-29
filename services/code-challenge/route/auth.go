@@ -2,6 +2,7 @@ package route
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -9,7 +10,18 @@ import (
 
 	"github.com/aaclee/ms-arch/services/auth/authpb"
 	"github.com/gorilla/mux"
+
+	// Required for postgres
+	_ "github.com/lib/pq"
 	"google.golang.org/grpc"
+)
+
+const (
+	codeChallengeHost     = "localhost"
+	codeChallengePort     = 5433
+	codeChallengeUser     = "ms_cc_psql"
+	codeChallengePassword = "password"
+	codeChallengeDBname   = "code_challenge_db"
 )
 
 type authRequestBody struct {
@@ -42,6 +54,38 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	defer cc.Close()
+
+	psqlCodeChallengeInfo := fmt.Sprintf(
+		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		codeChallengeHost,
+		codeChallengePort,
+		codeChallengeUser,
+		codeChallengePassword,
+		codeChallengeDBname,
+	)
+
+	dbCodeChallenge, err := sql.Open("postgres", psqlCodeChallengeInfo)
+	if err != nil {
+		log.Fatalf("CODE_CHALLENGE: Could not open connection to database: %v", err)
+	}
+	defer dbCodeChallenge.Close()
+
+	err = dbCodeChallenge.Ping()
+	if err != nil {
+		log.Fatalf("CODE_CHALLENGE: Could not ping database: %v", err)
+	}
+
+	codeChallengeSelectQuery := `SELECT uuid FROM users WHERE email=$1;`
+	row := dbCodeChallenge.QueryRow(codeChallengeSelectQuery, body.Username)
+
+	var uuid string
+	var email string
+	err = row.Scan(&uuid, &email)
+	if err != nil {
+		encodeError(w, http.StatusNotFound, "Username or password incorrect!")
+		fmt.Println("Could not select query")
+		return
+	}
 
 	c := authpb.NewAuthServiceClient(cc)
 
