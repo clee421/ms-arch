@@ -24,7 +24,7 @@ func (*Server) Authenticate(ctx context.Context, req *authpb.AuthenticateRequest
 
 	var response *authpb.AuthenticateResponse
 	var err error
-	if username == "steve.jobs@apple.com" && password == "password" {
+	if username == "admin@email.com" && password == "password" {
 		err = nil
 		response = &authpb.AuthenticateResponse{
 			Token: "928refhunasf89ys9d8f",
