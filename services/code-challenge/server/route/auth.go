@@ -64,7 +64,7 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 	ccRes, err := codeChallengeClient.User(context.Background(), userRequest)
 	if err != nil {
 		fmt.Printf("Could not find user: %v\n", err)
-		encodeError(w, http.StatusNotFound, "Username or password incorrect!")
+		encodeError(w, http.StatusUnauthorized, "Username or password incorrect!")
 		return
 	}
 
@@ -76,7 +76,7 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 	}
 	authRes, err := authClient.Authenticate(context.Background(), authRequest)
 	if err != nil {
-		encodeError(w, http.StatusNotFound, "Username or password incorrect!")
+		encodeError(w, http.StatusUnauthorized, "Username or password incorrect!")
 	} else {
 		encode(w, authResponse{authRes.Token})
 	}
