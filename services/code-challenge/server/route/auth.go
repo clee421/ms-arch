@@ -64,13 +64,13 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 	ccRes, err := codeChallengeClient.User(context.Background(), userRequest)
 	if err != nil {
 		fmt.Printf("Could not find user: %v\n", err)
-	} else {
-		fmt.Printf("User found: %v\n", ccRes.User)
+		encodeError(w, http.StatusNotFound, "Username or password incorrect!")
+		return
 	}
 
 	authRequest := &authpb.AuthenticateRequest{
 		Auth: &authpb.Authentication{
-			Username: body.Username,
+			Uuid:     ccRes.User.GetUuid(),
 			Password: body.Password,
 		},
 	}
