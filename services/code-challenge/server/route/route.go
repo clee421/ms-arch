@@ -11,6 +11,9 @@ func Handler(r *mux.Router) {
 	// Routes for Authentication
 	AuthRoutes(s)
 
+	// Routes for Challenges
+	ChallengeRoutes(s)
+
 	// The catch all route - KEEP THIS LAST
 	DefaultRoute(r)
 }
