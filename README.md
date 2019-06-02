@@ -130,4 +130,5 @@ $ psql -h localhost -p 5433 -d code_challenge_db -U ms_cc_psql
 1. Configuration Files
 2. Service: Logging
 3. Service: Error Handling
-4. Instructions to Setup
+4. Testing
+5. Instructions to Setup
