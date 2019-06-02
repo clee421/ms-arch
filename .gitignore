@@ -1,1 +1,5 @@
+# Golang libraries
 vendor/
+
+# Local data
+./data

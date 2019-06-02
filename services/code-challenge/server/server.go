@@ -5,11 +5,12 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/aaclee/ms-arch/services/code-challenge/route"
+	"github.com/aaclee/ms-arch/services/code-challenge/server/route"
 	"github.com/gorilla/mux"
 )
 
 func main() {
+	fmt.Println("Code Challenge Server")
 	// New router from gorilla-mux
 	r := mux.NewRouter()
 
