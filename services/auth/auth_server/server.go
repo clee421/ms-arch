@@ -7,7 +7,9 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"time"
 
+	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/aaclee/ms-arch/services/auth/authpb"
@@ -70,8 +72,22 @@ func (*Server) Authenticate(ctx context.Context, req *authpb.AuthenticateRequest
 		err = errors.New("Invalid username or password")
 		response = nil
 	} else {
+		// TODO: Add email / username to this claims
+		token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+			"iss": "msp.auth_service",
+			"sub": string(uuid),
+			"aud": "msp.code_challenge",
+			"exp": time.Now().Add(time.Hour * 8),
+			"nbf": time.Now(),
+			"iat": time.Now(),
+		})
+
+		// TODO: Issue 500 error if token signing failed
+		tokenString, err := token.SignedString([]byte("msp_secret"))
+
+		fmt.Println(tokenString, err)
 		response = &authpb.AuthenticateResponse{
-			Token: "928refhunasf89ys9d8f",
+			Token: tokenString,
 		}
 	}
 
