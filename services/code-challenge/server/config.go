@@ -5,26 +5,9 @@ import (
 	"os"
 )
 
-// Configuration type for authentication server configs
+// Configuration type for code-challenge server configs
 type Configuration struct {
-	Host     string         `json:"host"`
-	Port     int            `json:"port"`
-	Database databaseConfig `json:"database"`
-	Jwt      jwtConfig      `json:"jwt"`
-}
-
-type databaseConfig struct {
-	Host     string `json:"host"`
-	Port     int    `json:"port"`
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Name     string `json:"name"`
-}
-
-type jwtConfig struct {
-	Issuer     string `json:"iss"`
-	Expiration string `json:"exp"`
-	Secret     string `json:"secret"`
+	Port int `json:"port"`
 }
 
 func getServerConfigs(filename string) (*Configuration, error) {

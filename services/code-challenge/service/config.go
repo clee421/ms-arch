@@ -10,7 +10,6 @@ type Configuration struct {
 	Host     string         `json:"host"`
 	Port     int            `json:"port"`
 	Database databaseConfig `json:"database"`
-	Jwt      jwtConfig      `json:"jwt"`
 }
 
 type databaseConfig struct {
@@ -19,12 +18,6 @@ type databaseConfig struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 	Name     string `json:"name"`
-}
-
-type jwtConfig struct {
-	Issuer     string `json:"iss"`
-	Expiration string `json:"exp"`
-	Secret     string `json:"secret"`
 }
 
 func getServerConfigs(filename string) (*Configuration, error) {
