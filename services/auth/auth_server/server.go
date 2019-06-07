@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"net"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -15,7 +14,6 @@ import (
 	"github.com/aaclee/ms-arch/services/auth/authpb"
 
 	_ "github.com/lib/pq"
-	"google.golang.org/grpc"
 )
 
 // Server type for Auth Service
@@ -86,25 +84,4 @@ func (server *Server) Authenticate(ctx context.Context, req *authpb.Authenticate
 	}
 
 	return response, err
-}
-
-func main() {
-	fmt.Println("Authentication Server")
-
-	config, err := getServerConfigs("./auth_server/config/config.development.json")
-	if err != nil {
-		log.Fatalf("Failed to get configs: %v", err)
-	}
-
-	lis, err := net.Listen("tcp", fmt.Sprintf("%v:%d", config.Host, config.Port))
-	if err != nil {
-		log.Fatalf("Failed to listen: %v", err)
-	}
-
-	s := grpc.NewServer()
-	authpb.RegisterAuthServiceServer(s, &Server{*config})
-
-	if err := s.Serve(lis); err != nil {
-		log.Fatalf("Failed to serve: %v", err)
-	}
 }

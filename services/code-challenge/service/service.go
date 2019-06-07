@@ -67,19 +67,3 @@ func (server *Server) User(ctx context.Context, req *ccpb.UserRequest) (*ccpb.Us
 
 	return response, err
 }
-
-func main() {
-	fmt.Println("Code Challenge Service")
-
-	lis, err := net.Listen("tcp", "0.0.0.0:50052")
-	if err != nil {
-		log.Fatalf("Failed to listen: %v", err)
-	}
-
-	s := grpc.NewServer()
-	ccpb.RegisterUserServiceServer(s, &Server{})
-
-	if err := s.Serve(lis); err != nil {
-		log.Fatalf("Failed to serve: %v", err)
-	}
-}
