@@ -127,8 +127,14 @@ $ psql -h localhost -p 5433 -d code_challenge_db -U ms_cc_psql
 
 # TODOs
 
-1. Configuration Files
+1. Configuration Files (DONE) / NOTE: Requires refactoring
+    * https://medium.com/@felipedutratine/manage-config-in-golang-to-get-variables-from-file-and-env-variables-33d876887152
 2. Service: Logging
+    * logrus - https://github.com/sirupsen/logrus
 3. Service: Error Handling
+    * https://github.com/juju/errors
 4. Testing
+    * Ginkgo - https://onsi.github.io/ginkgo/
 5. Instructions to Setup
+6. Productivity?
+    * Cobra - https://github.com/spf13/cobra

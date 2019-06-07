@@ -5,26 +5,18 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"net"
 
 	"github.com/aaclee/ms-arch/services/code-challenge/service/ccpb"
 	_ "github.com/lib/pq"
-	"google.golang.org/grpc"
-)
-
-const (
-	codeChallengeHost     = "localhost"
-	codeChallengePort     = 5433
-	codeChallengeUser     = "ms_cc_psql"
-	codeChallengePassword = "password"
-	codeChallengeDBname   = "code_challenge_db"
 )
 
 // Server type for Auth Service
-type Server struct{}
+type Server struct {
+	Config Configuration
+}
 
 // User will get user by username
-func (*Server) User(ctx context.Context, req *ccpb.UserRequest) (*ccpb.UserResponse, error) {
+func (server *Server) User(ctx context.Context, req *ccpb.UserRequest) (*ccpb.UserResponse, error) {
 	username := req.GetUsername()
 
 	fmt.Printf("Fetching user from database: %v\n", username)
@@ -32,11 +24,11 @@ func (*Server) User(ctx context.Context, req *ccpb.UserRequest) (*ccpb.UserRespo
 	// Database fetch
 	psqlCodeChallengeInfo := fmt.Sprintf(
 		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		codeChallengeHost,
-		codeChallengePort,
-		codeChallengeUser,
-		codeChallengePassword,
-		codeChallengeDBname,
+		server.Config.Database.Host,
+		server.Config.Database.Port,
+		server.Config.Database.Username,
+		server.Config.Database.Password,
+		server.Config.Database.Name,
 	)
 
 	dbCodeChallenge, err := sql.Open("postgres", psqlCodeChallengeInfo)
@@ -74,20 +66,4 @@ func (*Server) User(ctx context.Context, req *ccpb.UserRequest) (*ccpb.UserRespo
 	}
 
 	return response, err
-}
-
-func main() {
-	fmt.Println("Code Challenge Service")
-
-	lis, err := net.Listen("tcp", "0.0.0.0:50052")
-	if err != nil {
-		log.Fatalf("Failed to listen: %v", err)
-	}
-
-	s := grpc.NewServer()
-	ccpb.RegisterUserServiceServer(s, &Server{})
-
-	if err := s.Serve(lis); err != nil {
-		log.Fatalf("Failed to serve: %v", err)
-	}
 }

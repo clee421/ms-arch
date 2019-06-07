@@ -20,3 +20,6 @@ https://dba.stackexchange.com/questions/69254/whats-the-most-efficient-uuid-colu
 
 DATABASE VARCHAR vs TEXT
 https://dba.stackexchange.com/questions/20974/should-i-add-an-arbitrary-length-limit-to-varchar-columns
+
+GO PACKAGES
+https://medium.com/@_orcaman/most-imported-golang-packages-some-insights-fb12915a07

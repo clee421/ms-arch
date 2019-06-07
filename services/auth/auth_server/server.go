@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"net"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -15,29 +14,22 @@ import (
 	"github.com/aaclee/ms-arch/services/auth/authpb"
 
 	_ "github.com/lib/pq"
-	"google.golang.org/grpc"
-)
-
-const (
-	authHost     = "localhost"
-	authPort     = 5432
-	authUser     = "ms_auth_psql"
-	authPassword = "password"
-	authDBname   = "auth_db"
 )
 
 // Server type for Auth Service
-type Server struct{}
+type Server struct {
+	Config Configuration
+}
 
 // Authenticate will validate username with password
-func (*Server) Authenticate(ctx context.Context, req *authpb.AuthenticateRequest) (*authpb.AuthenticateResponse, error) {
+func (server *Server) Authenticate(ctx context.Context, req *authpb.AuthenticateRequest) (*authpb.AuthenticateResponse, error) {
 	psqlAuthInfo := fmt.Sprintf(
 		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		authHost,
-		authPort,
-		authUser,
-		authPassword,
-		authDBname,
+		server.Config.Database.Host,
+		server.Config.Database.Port,
+		server.Config.Database.Username,
+		server.Config.Database.Password,
+		server.Config.Database.Name,
 	)
 
 	dbAuth, err := sql.Open("postgres", psqlAuthInfo)
@@ -74,7 +66,7 @@ func (*Server) Authenticate(ctx context.Context, req *authpb.AuthenticateRequest
 	} else {
 		// TODO: Add email / username to this claims
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-			"iss": "msp.auth_service",
+			"iss": server.Config.Jwt.Issuer,
 			"sub": string(uuid),
 			"aud": "msp.code_challenge",
 			"exp": time.Now().Add(time.Hour * 8),
@@ -83,7 +75,7 @@ func (*Server) Authenticate(ctx context.Context, req *authpb.AuthenticateRequest
 		})
 
 		// TODO: Issue 500 error if token signing failed
-		tokenString, err := token.SignedString([]byte("msp_secret"))
+		tokenString, err := token.SignedString([]byte(server.Config.Jwt.Secret))
 
 		fmt.Println(tokenString, err)
 		response = &authpb.AuthenticateResponse{
@@ -92,20 +84,4 @@ func (*Server) Authenticate(ctx context.Context, req *authpb.AuthenticateRequest
 	}
 
 	return response, err
-}
-
-func main() {
-	fmt.Println("Authentication Server")
-
-	lis, err := net.Listen("tcp", "0.0.0.0:50051")
-	if err != nil {
-		log.Fatalf("Failed to listen: %v", err)
-	}
-
-	s := grpc.NewServer()
-	authpb.RegisterAuthServiceServer(s, &Server{})
-
-	if err := s.Serve(lis); err != nil {
-		log.Fatalf("Failed to serve: %v", err)
-	}
 }

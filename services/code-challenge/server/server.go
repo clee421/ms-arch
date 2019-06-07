@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
@@ -11,12 +12,17 @@ import (
 
 func main() {
 	fmt.Println("Code Challenge Server")
-	// New router from gorilla-mux
+
+	config, err := getServerConfigs("./config/config.development.json")
+	if err != nil {
+		log.Fatalf("Failed to get configs: %v", err)
+	}
+
 	r := mux.NewRouter()
 
 	route.Handler(r)
 
-	port := getPort(":8000")
+	port := getPort(fmt.Sprintf(":%d", config.Port))
 	fmt.Printf("Running server on port %v...\n", port)
 
 	// Pass router into the server
