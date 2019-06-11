@@ -23,3 +23,9 @@ https://dba.stackexchange.com/questions/20974/should-i-add-an-arbitrary-length-l
 
 GO PACKAGES
 https://medium.com/@_orcaman/most-imported-golang-packages-some-insights-fb12915a07
+
+127.0.0.1 vs 0.0.0.0
+https://www.howtogeek.com/225487/what-is-the-difference-between-127.0.0.1-and-0.0.0.0/
+
+LOGGING
+https://stackoverflow.com/questions/30257622/golang-logrus-how-to-do-a-centralized-configuration
