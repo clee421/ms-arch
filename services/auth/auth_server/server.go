@@ -5,42 +5,43 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/aaclee/ms-arch/services/auth/authpb"
+	log "github.com/sirupsen/logrus"
 
 	_ "github.com/lib/pq"
 )
 
 // Server type for Auth Service
 type Server struct {
-	Config Configuration
+	config Configuration
+	log    log.Logger
 }
 
 // Authenticate will validate username with password
 func (server *Server) Authenticate(ctx context.Context, req *authpb.AuthenticateRequest) (*authpb.AuthenticateResponse, error) {
 	psqlAuthInfo := fmt.Sprintf(
 		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		server.Config.Database.Host,
-		server.Config.Database.Port,
-		server.Config.Database.Username,
-		server.Config.Database.Password,
-		server.Config.Database.Name,
+		server.config.Database.Host,
+		server.config.Database.Port,
+		server.config.Database.Username,
+		server.config.Database.Password,
+		server.config.Database.Name,
 	)
 
 	dbAuth, err := sql.Open("postgres", psqlAuthInfo)
 	if err != nil {
-		log.Fatalf("AUTH: Could not open connection to database: %v", err)
+		server.log.Fatalf("AUTH: Could not open connection to database: %v", err)
 	}
 	defer dbAuth.Close()
 
 	err = dbAuth.Ping()
 	if err != nil {
-		log.Fatalf("AUTH: Could not ping database: %v", err)
+		server.log.Fatalf("AUTH: Could not ping database: %v", err)
 	}
 
 	uuid := req.GetAuth().GetUuid()
@@ -52,7 +53,7 @@ func (server *Server) Authenticate(ctx context.Context, req *authpb.Authenticate
 	var passwordHash string
 	err = row.Scan(&passwordHash)
 
-	fmt.Printf("Authenticating: %s\n", uuid)
+	server.log.Infof("Authenticating: %s\n", uuid)
 
 	if err == nil {
 		err = bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(password))
@@ -60,13 +61,13 @@ func (server *Server) Authenticate(ctx context.Context, req *authpb.Authenticate
 
 	var response *authpb.AuthenticateResponse
 	if err != nil {
-		fmt.Printf("Error Authenticating %v: %v\n", passwordHash, err)
+		server.log.Infof("Error Authenticating %v: %v\n", passwordHash, err)
 		err = errors.New("Invalid username or password")
 		response = nil
 	} else {
 		// TODO: Add email / username to this claims
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-			"iss": server.Config.Jwt.Issuer,
+			"iss": server.config.Jwt.Issuer,
 			"sub": string(uuid),
 			"aud": "msp.code_challenge",
 			"exp": time.Now().Add(time.Hour * 8),
@@ -75,9 +76,9 @@ func (server *Server) Authenticate(ctx context.Context, req *authpb.Authenticate
 		})
 
 		// TODO: Issue 500 error if token signing failed
-		tokenString, err := token.SignedString([]byte(server.Config.Jwt.Secret))
+		tokenString, _ := token.SignedString([]byte(server.config.Jwt.Secret))
 
-		fmt.Println(tokenString, err)
+		// fmt.Println(tokenString, err)
 		response = &authpb.AuthenticateResponse{
 			Token: tokenString,
 		}
