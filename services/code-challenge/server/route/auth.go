@@ -3,18 +3,27 @@ package route
 import (
 	"context"
 	"encoding/json"
-	"fmt"
-	"log"
 	"net/http"
+	"os"
 
 	"github.com/aaclee/ms-arch/services/auth/authpb"
 	"github.com/aaclee/ms-arch/services/code-challenge/service/ccpb"
 	"github.com/gorilla/mux"
+	log "github.com/sirupsen/logrus"
 
 	// Required for postgres
 	_ "github.com/lib/pq"
 	"google.golang.org/grpc"
 )
+
+func init() {
+	// Output to stdout instead of the default stderr
+	// Can be any io.Writer, see below for File example
+	log.SetOutput(os.Stdout)
+
+	// Only log the warning severity or above.
+	log.SetLevel(log.DebugLevel)
+}
 
 type authRequestBody struct {
 	Username string `json:"username"`
@@ -37,7 +46,7 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(&body)
 
 	if err != nil {
-		fmt.Println("Error with post body")
+		log.Info("Error with post body")
 	}
 
 	authCC, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
@@ -63,7 +72,7 @@ func authenticate(w http.ResponseWriter, r *http.Request) {
 	}
 	ccRes, err := codeChallengeClient.User(context.Background(), userRequest)
 	if err != nil {
-		fmt.Printf("Could not find user: %v\n", err)
+		log.Infof("Could not find user: %v\n", err)
 		encodeError(w, http.StatusUnauthorized, "Username or password incorrect!")
 		return
 	}
