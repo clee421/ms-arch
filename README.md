@@ -129,7 +129,7 @@ $ psql -h localhost -p 5433 -d code_challenge_db -U ms_cc_psql
 
 1. Configuration Files (DONE) / NOTE: Requires refactoring
     * https://medium.com/@felipedutratine/manage-config-in-golang-to-get-variables-from-file-and-env-variables-33d876887152
-2. Service: Logging
+2. Service: Logging (DONE) / NOTE: code challenge architecture is all wrong! MUST REFACTOR
     * logrus - https://github.com/sirupsen/logrus
 3. Service: Error Handling
     * https://github.com/juju/errors
