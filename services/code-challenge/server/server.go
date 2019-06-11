@@ -2,18 +2,32 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 
 	"github.com/aaclee/ms-arch/services/code-challenge/server/route"
 	"github.com/gorilla/mux"
+	log "github.com/sirupsen/logrus"
 )
 
-func main() {
-	fmt.Println("Code Challenge Server")
+const (
+	configFile = "./config/config.development.json"
+)
 
-	config, err := getServerConfigs("./config/config.development.json")
+func init() {
+	// Output to stdout instead of the default stderr
+	// Can be any io.Writer, see below for File example
+	log.SetOutput(os.Stdout)
+
+	// Only log the warning severity or above.
+	log.SetLevel(log.DebugLevel)
+}
+
+func main() {
+	log.Info("Code Challenge Server: Status - Booting")
+
+	log.Infof("Loading configs from: %s\n", configFile)
+	config, err := getServerConfigs(configFile)
 	if err != nil {
 		log.Fatalf("Failed to get configs: %v", err)
 	}
@@ -23,7 +37,7 @@ func main() {
 	route.Handler(r)
 
 	port := getPort(fmt.Sprintf(":%d", config.Port))
-	fmt.Printf("Running server on port %v...\n", port)
+	log.Infof("Running server on port %v...\n", port)
 
 	// Pass router into the server
 	http.ListenAndServe(port, r)
