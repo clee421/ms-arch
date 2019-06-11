@@ -4,31 +4,32 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"log"
 
 	"github.com/aaclee/ms-arch/services/code-challenge/service/ccpb"
 	_ "github.com/lib/pq"
+	log "github.com/sirupsen/logrus"
 )
 
 // Server type for Auth Service
 type Server struct {
-	Config Configuration
+	config Configuration
+	log    log.Logger
 }
 
 // User will get user by username
 func (server *Server) User(ctx context.Context, req *ccpb.UserRequest) (*ccpb.UserResponse, error) {
 	username := req.GetUsername()
 
-	fmt.Printf("Fetching user from database: %v\n", username)
+	server.log.Infof("Fetching user from database: %v\n", username)
 
 	// Database fetch
 	psqlCodeChallengeInfo := fmt.Sprintf(
 		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		server.Config.Database.Host,
-		server.Config.Database.Port,
-		server.Config.Database.Username,
-		server.Config.Database.Password,
-		server.Config.Database.Name,
+		server.config.Database.Host,
+		server.config.Database.Port,
+		server.config.Database.Username,
+		server.config.Database.Password,
+		server.config.Database.Name,
 	)
 
 	dbCodeChallenge, err := sql.Open("postgres", psqlCodeChallengeInfo)
