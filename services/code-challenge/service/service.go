@@ -34,13 +34,13 @@ func (server *Server) User(ctx context.Context, req *ccpb.UserRequest) (*ccpb.Us
 
 	dbCodeChallenge, err := sql.Open("postgres", psqlCodeChallengeInfo)
 	if err != nil {
-		log.Fatalf("CODE_CHALLENGE: Could not open connection to database: %v", err)
+		server.log.Fatalf("CODE_CHALLENGE: Could not open connection to database: %v", err)
 	}
 	defer dbCodeChallenge.Close()
 
 	err = dbCodeChallenge.Ping()
 	if err != nil {
-		log.Fatalf("CODE_CHALLENGE: Could not ping database: %v", err)
+		server.log.Fatalf("CODE_CHALLENGE: Could not ping database: %v", err)
 	}
 
 	codeChallengeSelectQuery := `SELECT id, uuid, email FROM users WHERE email=$1;`
