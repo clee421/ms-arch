@@ -32,3 +32,11 @@ https://stackoverflow.com/questions/30257622/golang-logrus-how-to-do-a-centraliz
 
 EMAIL
 https://kinsta.com/knowledgebase/free-smtp-server/
+
+SCSS
+https://facebook.github.io/create-react-app/docs/adding-a-sass-stylesheet
+
+CSS - RESET
+https://facebook.github.io/create-react-app/docs/adding-css-reset
+https://github.com/facebook/create-react-app/issues/2273
+https://css-tricks.com/box-sizing/
