@@ -29,3 +29,6 @@ https://www.howtogeek.com/225487/what-is-the-difference-between-127.0.0.1-and-0.
 
 LOGGING
 https://stackoverflow.com/questions/30257622/golang-logrus-how-to-do-a-centralized-configuration
+
+EMAIL
+https://kinsta.com/knowledgebase/free-smtp-server/
