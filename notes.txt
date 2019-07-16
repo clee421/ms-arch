@@ -40,3 +40,9 @@ CSS - RESET
 https://facebook.github.io/create-react-app/docs/adding-css-reset
 https://github.com/facebook/create-react-app/issues/2273
 https://css-tricks.com/box-sizing/
+
+REACT - TYPING
+https://github.com/piotrwitek/react-redux-typescript-guide
+
+REACT - PRETTIER
+https://dev.to/benweiser/how-to-set-up-eslint-typescript-prettier-with-create-react-app-3675
