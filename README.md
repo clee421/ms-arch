@@ -25,86 +25,48 @@ $ brew upgrade dep
 
 User `dep` to install vendor files
 
-## Kubernetes
+## Docker
 
 ### Link
 
-https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl-on-macos
+https://docs.docker.com/docker-for-mac/install/
+
+## Docker Compose
+
+### Link
+
+https://docs.docker.com/compose/install/
+
+## Yarn
+
+### Link
+
+https://yarnpkg.com/lang/en/docs/install/#mac-stable
 
 ### Installation
 
 ```shell
-$ brew install kubernetes-cli
-$ go get -d k8s.io/kubernetes
+$ brew install yarn
 ```
 
-## Minikube
+## golang-migrate
 
 ### Link
 
-https://kubernetes.io/docs/tasks/tools/install-minikube/#before-you-begin
+https://github.com/golang-migrate/migrate/tree/master/cmd/migrate
 
 ### Installation
 
 ```shell
-$ brew cask install minikube
-```
-
-## VirtualBox
-
-### Link
-
-https://www.virtualbox.org/wiki/Downloads
-
-## Skaffold
-
-### Link
-
-https://skaffold.dev/docs/getting-started/#installing-skaffold
-
-### Installation
-
-```shell
-# macOS
-
-$ brew install skaffold
+$ brew install golang-migrate
 ```
 
 # Environment
 
-## Kubernetes
+## Docker Compose
 
 ```shell
-$ kubectl create -f pod.yaml
-```
-
-# Notes
-
-## Kubernetes
-
-https://github.com/GoogleCloudPlatform/postgresql-docker/blob/master/9/README.md#using-kubernetes
-
-### PostgresQL
-
-Create Pod
-```shell
-$ kubectl create -f pod.yaml
-```
-
-Expose port
-```shell
-$ kubectl expose pod auth-psql --name auth-psql-5432 \
-  --type LoadBalancer --port 5432 --protocol TCP
-```
-
-Run a PostgreSQL client directly within the container.
-```shell
-$ kubectl exec -it auth-psql -- psql --username ms_auth_psql
-```
-
-Run in a new terminal to expose external ip
-```shell
-$ minikube tunnel
+$ docker-compose up -d
 ```
 
 # Migrations
@@ -118,11 +80,37 @@ $ migrate -database postgres://ms_auth_psql:password@localhost:5432/auth_db?sslm
 $ migrate -database postgres://ms_cc_psql:password@localhost:5433/code_challenge_db?sslmode=disable -path ./migrations up
 ```
 
-### Connecting Manuall
+### Seeding
+
+```shell
+$ go run services/utilities/seed/admin.go
+```
+
+### Connecting Manually
 
 ```shell
 $ psql -h localhost -p 5432 -d auth_db -U ms_auth_psql
 $ psql -h localhost -p 5433 -d code_challenge_db -U ms_cc_psql
+```
+
+# Starting Application
+
+```shell
+// New tab
+$ cd services/auth/
+$ go run auth_server/main.go auth_server/server.go auth_server/config.go
+
+// New tab
+$ cd services/code-challenge/server/
+$ go run server.go config.go
+
+// New tab
+$ cd services/code-challenge/service
+$ go run main.go service.go config.go
+
+// New tab
+$ cd uis/msp-overview/
+$ yarn start
 ```
 
 # TODOs
