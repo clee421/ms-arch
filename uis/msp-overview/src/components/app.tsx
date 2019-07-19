@@ -12,20 +12,36 @@ import './app.scss';
 
 const App: React.FC = (): ReactElement => {
   const token = useSelector((state: AppState): string => state.system.token);
-  const username = useFormInput('', { type: 'text', name: 'username' });
-  const password = useFormInput('', { type: 'password', name: 'password' });
+  const username = useFormInput('', {
+    name: 'username',
+  });
+  const password = useFormInput('', {
+    type: 'password',
+    name: 'password',
+  });
+
+  function handleSubmit(): void {
+    // eslint-disable-next-line
+    console.log(`Username: ${username.value}; Password: ${password.value}`);
+  }
 
   return (
     <div className="app-container">
       <div className="input-boxes">
         <label>
-          username
+          <span>username</span>
           <input {...username} />
         </label>
         <label>
-          password
+          <span>password</span>
           <input {...password} />
         </label>
+      </div>
+
+      <div className="submit-container">
+        <button type="button" onClick={handleSubmit}>
+          Submit
+        </button>
       </div>
 
       <div className="token-container">{`Token: ${token}`}</div>
