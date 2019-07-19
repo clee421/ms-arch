@@ -8,12 +8,13 @@ export interface FormInput {
 export interface FormInputConfig {
   type?: string;
   name?: string;
+  height?: string;
 }
 
 export function useFormInput(
   initialValue: string,
   config: FormInputConfig = {},
-): FormInput {
+): FormInput & FormInputConfig {
   const [value, setValue] = useState(initialValue);
 
   function handleChange(e: any): void {
@@ -23,6 +24,7 @@ export function useFormInput(
   return {
     value,
     onChange: handleChange,
+    type: 'text',
     ...config,
   };
 }
