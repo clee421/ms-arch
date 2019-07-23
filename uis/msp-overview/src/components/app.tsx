@@ -1,11 +1,14 @@
 import React, { ReactElement } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 // Types
 import { AppState } from '../store';
 
 // Hooks
-import { useFormInput } from '../hooks/form-input';
+import { useFormInput } from '../hooks/form-input.hook';
+
+// Actions
+import { login } from '../store/system/actions';
 
 // Style
 import './app.scss';
@@ -20,7 +23,10 @@ const App: React.FC = (): ReactElement => {
     name: 'password',
   });
 
+  const dispatch = useDispatch();
+
   function handleSubmit(): void {
+    login(username.value, password.value)(dispatch);
     // eslint-disable-next-line
     console.log(`Username: ${username.value}; Password: ${password.value}`);
   }
