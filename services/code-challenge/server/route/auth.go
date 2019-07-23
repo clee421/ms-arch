@@ -36,10 +36,16 @@ type authResponse struct {
 
 // AuthRoutes for the authentication path
 func AuthRoutes(r *mux.Router) {
-	r.HandleFunc("/auth", authenticate).Methods("POST")
+	r.HandleFunc("/auth", authenticate).Methods(http.MethodPost, http.MethodOptions)
 }
 
 func authenticate(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, Authorization,X-CSRF-Token")
+	if r.Method == http.MethodOptions {
+		return
+	}
+
 	decoder := json.NewDecoder(r.Body)
 
 	var body authRequestBody
