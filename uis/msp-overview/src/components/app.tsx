@@ -1,29 +1,56 @@
 import React, { ReactElement } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 // Types
 import { AppState } from '../store';
 
+// Hooks
+import { useFormInput } from '../hooks/form-input.hook';
+
+// Actions
+import { login } from '../store/system/actions';
+
+// Style
 import './app.scss';
 
 const App: React.FC = (): ReactElement => {
   const token = useSelector((state: AppState): string => state.system.token);
+  const username = useFormInput('', {
+    name: 'username',
+  });
+  const password = useFormInput('', {
+    type: 'password',
+    name: 'password',
+  });
+
+  const dispatch = useDispatch();
+
+  function handleSubmit(): void {
+    login(username.value, password.value)(dispatch);
+    // eslint-disable-next-line
+    console.log(`Username: ${username.value}; Password: ${password.value}`);
+  }
+
   return (
     <div className="app-container">
       <div className="input-boxes">
         <label>
-          username
-          <input type="text" name="username" />
+          <span>username</span>
+          <input {...username} />
         </label>
         <label>
-          password
-          <input type="text" name="password" />
-        </label>
-        <label>
-          token
-          <input type="text" name="token" value={token} />
+          <span>password</span>
+          <input {...password} />
         </label>
       </div>
+
+      <div className="submit-container">
+        <button type="button" onClick={handleSubmit}>
+          Submit
+        </button>
+      </div>
+
+      <div className="token-container">{`Token: ${token}`}</div>
     </div>
   );
 };
