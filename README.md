@@ -76,8 +76,8 @@ $ docker-compose up -d
 ### CLI
 
 ```shell
-$ migrate -database postgres://ms_auth_psql:password@localhost:5432/auth_db?sslmode=disable -path ./migrations up
-$ migrate -database postgres://ms_cc_psql:password@localhost:5433/code_challenge_db?sslmode=disable -path ./migrations up
+$ migrate -database "postgres://ms_auth_psql:password@localhost:5432/auth_db?sslmode=disable" -path ./migrations up
+$ migrate -database "postgres://ms_cc_psql:password@localhost:5433/code_challenge_db?sslmode=disable" -path ./migrations up
 ```
 
 ### Seeding
